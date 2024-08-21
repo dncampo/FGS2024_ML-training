@@ -44,7 +44,7 @@ Any **NGSI** version could be use, but in this demo **NGSI-LD** is implemented.
 ## Architecture
 <img src="docs/img/architecrure_01_draft.jpg" align="left" width="1200"/>
 
-<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+<br><br>
 ---
 
 
