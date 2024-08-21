@@ -1,2 +1,69 @@
-# FGS2024_ML-training
-Training use case for the FIWARE Global Summit 2024 in Naples, Italy
+# FIWARE Global Summit 2024 ML-training
+Training use case for the FIWARE Global Summit 2024 in Naples, Italy.
+
+## Smart Health Tutorial - A Proof of Concept for screening skin diseases 
+
+[<img src="https://img.shields.io/badge/NGSI-LD-d6604d.svg" width="90"  align="left" />][ngsiLdDefinitionLink] [<img src="docs/img/logo-fiware.png" align="left" width="120" >](https://www.fiware.org/)
+<br/><br/>
+
+[![Documentation](https://nexus.lab.fiware.org/repository/raw/public/badges/chapters/documentation.svg)](https://ngsi-ld-tutorials.rtfd.io)
+[![License: gpl-3](https://img.shields.io/badge/license-GPLv3-blue)](https://opensource.org/license/gpl-3-0)
+[![Support badge](https://img.shields.io/badge/tag-fiware-orange.svg?logo=stackoverflow)](https://stackoverflow.com/questions/tagged/fiware)
+
+
+---
+
+
+This is a use case example for health domain. The idea of this Proof of Concept (PoC) is to show how a medical image can be integrated into a Powered by FIWARE solution along with a Machine Learning (ML) model in order to perform predictions on observed images.
+Any **NGSI** version could be use, but in this demo **NGSI-LD** is implemented.
+<br/>
+
+---
+
+
+## Warning Notice
+> This Application is for **Demonstration Purposes Only**
+>
+> This application is a **Proof of Concept (PoC)** designed to demonstrate the underlying technology, including 
+> *Machine Learning, Deep Learning, Keras, Python, FIWARE, JSON*, and other technical components.
+>
+>
+> **Important: This application is not intended to be used as a medical tool or to provide medical advice.**
+>
+> - **DO NOT** use this application to make decisions about your or others health.
+> - **DO NOT** rely on this application for the diagnosis or treatment of any medical condition.
+>
+> For any concerns regarding your health, skin moles, or any other medical issues, **please consult a qualified healthcare professional**.
+>
+> Your health and well-being should always be managed by a licensed medical professional. *This application is purely for demonstrating the potential of the technology* and **should not** be used as a substitute for professional medical advice, diagnosis, or treatment.
+>
+
+---
+
+
+## Architecture
+<img src="docs/img/architecrure_01_draft.jpg" align="left" width="1200"/>
+
+<br><br>
+---
+
+
+## Installation
+To download this tutorial, simply clone this repository:
+
+```console
+gh repo clone dncampo/FGS2024_ML-training
+```
+or simply
+```console
+git clone https://github.com/dncampo/FGS2024_ML-training.git
+```
+
+---
+
+## License
+
+[GPL-v3](LICENSE)
+
+
+[ngsiLdDefinitionLink]: https://www.etsi.org/deliver/etsi_gs/CIM/001_099/009/01.08.01_60/gs_cim009v010801p.pdf
