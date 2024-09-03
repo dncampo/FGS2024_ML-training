@@ -1,0 +1,17 @@
+title Main interactions
+
+Front End->IoT:The Physician \nuploads the photo and \nextra info about the patient
+IoT->FIWARE CB:The IoT prepares \nthe Entity to be created \nin the CB 
+FIWARE CB->Cygnus:Fires a notification \nto store the history
+Cygnus->MySQL:Stores \nhistorical \ndata
+FIWARE CB->BackEnd Inference:Fires a notification with\n the observation to be infered \nby the BackEnd
+FIWARE CB<-BackEnd Inference:Asks for list of models 
+FIWARE CB->BackEnd Inference:Response about available models
+BackEnd Inference->Model Registry:Ask for versions of model
+BackEnd Inference<-Model Registry:Answer with model \nand how to run it
+BackEnd Inference->Model Registry:Ask for inference \nto specific model
+BackEnd Inference(1)<-Model Registry:Results
+FIWARE CB<-BackEnd Inference:Inform results creating Entity
+FIWARE CB->Grafana:Display stats
+Grafana->MySQL:Get historical data to display stats
+Front End<-BackEnd Inference:Callback with results

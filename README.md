@@ -45,6 +45,8 @@ Any **NGSI** version could be use, but in this demo **NGSI-LD** is implemented.
 <img src="docs/img/architecrure_01_draft.jpg" align="left" width="1200"/>
 
 <br><br>
+<img src="docs/architecture/overview_seq_diag_01.png" align="left" width="1200"/>
+<br><br>
 ---
 
 
@@ -66,4 +68,4 @@ git clone https://github.com/dncampo/FGS2024_ML-training.git
 [GPL-v3](LICENSE)
 
 
-[ngsiLdDefinitionLink]: https://www.etsi.org/deliver/etsi_gs/CIM/001_099/009/01.08.01_60/gs_cim009v010801p.pdf
+[ngsiLdDefinitionLink]: https://www.etsi.org/deliver/etsi_gs/CIM/001_099/009/01.08.01_60/gs_cim009v010801p.pdfIf anybody is missing, please let me know.
