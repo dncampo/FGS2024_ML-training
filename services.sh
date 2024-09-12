@@ -133,10 +133,10 @@ case "${command}" in
         waitForOrion
         #loadData orion:1026
         echo -e "\033[1;34m${command}\033[0m is now running and exposed on localhost:${EXPOSED_PORT}"
-        echo -e "Now open \033[4mhttp://localhost:3000/device/monitor\033[0m"
         ;;
     "stop")
         export $(cat .env .mysql.env | grep "#" -v)
+        echo "Stopping containers"
         stoppingContainers
         ;;
      "create")
