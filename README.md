@@ -63,6 +63,24 @@ git clone https://github.com/dncampo/FGS2024_ML-training.git
 
 ---
 
+## Run
+To start the containers:
+
+```console
+./services [start | stop]
+```
+
+Will start or stop services - docker containers - respectively. With `create` param you should be able to download and / or create the containers without starting them.
+source ~/venv/bin/activate
+
+To start the front end:
+```console
+source ~/venv/bin/activate;
+streamlit run app.py
+```
+
+Will activate the proper environent and start the Streamlit front end app.
+
 ## License
 
 [GPL-v3](LICENSE)

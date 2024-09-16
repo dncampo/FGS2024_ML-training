@@ -18,6 +18,36 @@
 #
 
 services:
+  backend-service:
+    labels:
+      org.fiware: 'fiware-health-poc'
+    build:
+      context: .
+      dockerfile: src/backend/Dockerfile
+    image: backend-health:latest
+    hostname: backend
+    container_name: ${BACKEND_NAME}
+    networks:
+      - fiware-health-poc
+    ports:
+      - ${BACKEND_PORT}:${BACKEND_PORT}
+    volumes:
+        - ml-models:/ml-models
+        - type: bind
+          source: ${PWD}/conf/mime.types
+          target: /usr/local/apache2/conf/mime.types
+          read_only: true
+        - data-test:/data-test
+        - type: bind
+          source: ${PWD}/conf/mime.types
+          target: /usr/local/apache2/conf/mime.types
+          read_only: true
+    healthcheck:
+      test: curl --fail -s http://${BACKEND_NAME}:${BACKEND_PORT}/health || exit 1
+      interval: 5s
+      retries: 3
+
+
   # @context file is served from here
   ld-context:
     labels:
@@ -99,8 +129,8 @@ services:
       - "CYGNUS_MYSQL_SERVICE_PORT=${CYGNUS_MYSQL_SERVICE_PORT}" # Notification Port that Cygnus listens when subcribing to context data changes
       - "CYGNUS_MYSQL_HOST=mysql-db" # Hostname of the MySQL server used to persist historical context data
       - "CYGNUS_MYSQL_PORT=${MYSQL_DB_PORT}" # Port that the MySQL server uses to listen to commands
-      - "CYGNUS_MYSQL_USER=root" # Username for the MySQL database user
-      - "CYGNUS_MYSQL_PASS=123" # Password for the MySQL database user
+      - "CYGNUS_MYSQL_USER=${MYSQL_ROOT_HOST}" # Username for the MySQL database user
+      - "CYGNUS_MYSQL_PASS=${MYSQL_ROOT_PASSWORD}" # Password for the MySQL database user
       - "CYGNUS_SERVICE_PORT=${CYGNUS_MYSQL_SERVICE_PORT}"
       - "CYGNUS_API_PORT=${CYGNUS_API_PORT}" # Port that Cygnus listens on for operational reasons
       - "CYGNUS_LOG_LEVEL=DEBUG" # The logging level for Cygnus
@@ -152,3 +182,15 @@ volumes:
       type: none
       o: bind
       device: ${PWD}/data-models
+  ml-models:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${PWD}/ml-models
+  data-test:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${PWD}/data-test
