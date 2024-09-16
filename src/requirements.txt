@@ -41,3 +41,6 @@ termcolor
 streamlit==1.11.1
 streamlit-option-menu
 altair==4
+
+requests
+websocket-client

@@ -31,11 +31,11 @@ SETTINGS = "Settings"
 @st.cache(allow_output_mutation=True)
 def load_models():
     print("loading models: ")
-    model_bin_96 = tfkm.load_model('models/ResNet50_finetuned_20220620_134553.h5')
-    # model_bin_96 = tfkm.load_model('models/ResNet50_finetuned_20220621_191452.h5')
+    model_bin_96 = tfkm.load_model('ml-models/ResNet50_finetuned_20220620_134553.h5')
+    # model_bin_96 = tfkm.load_model('ml-models/ResNet50_finetuned_20220621_191452.h5')
     print("Binary model loaded.")
-    model_cat_84 = tfkm.load_model('models/ResNet50_multiclass_20220623_121940.h5')
-    # model_cat_84 = tfkm.load_model('models/models_ResNet50_multiclass_20220623_121940.h5')
+    model_cat_84 = tfkm.load_model('ml-models/ResNet50_multiclass_20220623_121940.h5')
+    # model_cat_84 = tfkm.load_model('ml-models/models_ResNet50_multiclass_20220623_121940.h5')
     print("Categorical model loaded.")
     return model_bin_96, model_cat_84
 

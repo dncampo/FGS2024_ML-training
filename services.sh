@@ -12,6 +12,8 @@ CORE_CONTEXT="https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.6.jsonld"
 USAGE_HELP="[create|start|stop]"
 
 dockerCmd="docker compose"
+build=""
+
 if (( $# == 2 )); then
     dockerCmd="docker-compose"
 fi
@@ -108,6 +110,23 @@ stoppingContainers () {
     fi
 }
 
+startContainers () {
+    export $(cat .env .mysql.env | grep "#" -v)
+    stoppingContainers
+    waitForCoreContext
+    echo -e "Starting containers:  \033[1;34mOrion\033[0m, \033[1;36mIoT-Agent\033[0m, \033[1mCygnus\033[0m, a linked data \033[1mContext\033[0m, a \033[1mGrafana\033[0m metrics dashboard, \033[1mCrateDB\033[0m and \033[1mMongoDB\033[0m databases and a \033[1mRedis\033[0m cache."
+    echo -e "- \033[1;34mOrion\033[0m is the context broker"
+    echo -e "- Data models \033[1m@context\033[0m (Smart Health) is supplied externally"
+    echo ""
+    ${dockerCmd} -f health-poc.yml -p fiware up ${build} -d --renew-anon-volumes
+    displayServices "orion|fiware"
+    waitForMongo
+    waitForOrion
+    #loadData orion:1026
+    echo -e "\033[1;34m${command}\033[0m is now running and exposed on localhost:${EXPOSED_PORT}"
+}
+
+
 displayServices () {
     echo ""
     docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}" --filter name="$1"
@@ -119,20 +138,13 @@ case "${command}" in
     "help")
         echo "usage: services ${USAGE_HELP}"
         ;;
+     "build")
+        build="--build"
+        echo "Building images on start"
+        startContainers
+        ;;
      "start")
-        export $(cat .env .mysql.env | grep "#" -v)
-        stoppingContainers
-        waitForCoreContext
-        echo -e "Starting containers:  \033[1;34mOrion\033[0m, \033[1;36mIoT-Agent\033[0m, \033[1mCygnus\033[0m, a linked data \033[1mContext\033[0m, a \033[1mGrafana\033[0m metrics dashboard, \033[1mCrateDB\033[0m and \033[1mMongoDB\033[0m databases and a \033[1mRedis\033[0m cache."
-        echo -e "- \033[1;34mOrion\033[0m is the context broker"
-        echo -e "- Data models \033[1m@context\033[0m (Smart Health) is supplied externally"
-        echo ""
-        ${dockerCmd} -f health-poc.yml -p fiware up -d --renew-anon-volumes
-        displayServices "orion|fiware"
-        waitForMongo
-        waitForOrion
-        #loadData orion:1026
-        echo -e "\033[1;34m${command}\033[0m is now running and exposed on localhost:${EXPOSED_PORT}"
+        startContainers
         ;;
     "stop")
         export $(cat .env .mysql.env | grep "#" -v)

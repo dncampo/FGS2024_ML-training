@@ -9,7 +9,7 @@ def create_entity(image):
 import json
 from datetime import datetime
 
-def create_and_send_ml_observation(cb_url, model_name, model_version, accuracy, dataset_id):
+def create_and_send_ml_observation(cb_url, model_name="ResNet50", model_version="v1", dataset_id="HAM10000"):
     # Prepare the NGSI-LD entity
     entity = {
         "id": "urn:ngsi-ld:MLProcessing:001",
@@ -22,11 +22,6 @@ def create_and_send_ml_observation(cb_url, model_name, model_version, accuracy, 
         "modelVersion": {
             "type": "Property",
             "value": model_version
-        },
-        "accuracy": {
-            "type": "Property",
-            "value": accuracy,
-            "unitCode": "P1"
         },
         "inferredDate": {
             "type": "Property",
@@ -65,7 +60,7 @@ def create_and_send_ml_observation(cb_url, model_name, model_version, accuracy, 
         print(f"Response: {response.text}")
         response.raise_for_status()  # Raises an HTTPError for bad responses
         return False
-    
+
     
 
 def send_image_to_server(image):
@@ -78,9 +73,8 @@ def send_image_to_server(image):
         cb_url = "http://127.0.0.1:1026"  # Replace with your Orion-LD Context Broker URL
         model_name = "CNN "
         model_version = "1.0.0"
-        accuracy = 0.94
         dataset_id = "HAM10000"
-        response = create_and_send_ml_observation(cb_url, model_name, model_version, accuracy, dataset_id)
+        response = create_and_send_ml_observation(cb_url, model_name, model_version, dataset_id)
 
         if response:
             print(response.json())

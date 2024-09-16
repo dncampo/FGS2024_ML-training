@@ -2,9 +2,9 @@
 
 
 # Context Broker configuration
-CB_HOST="http://localhost:1026"
-CB_API_PATH="/ngsi-ld/v1/entities/"
-FIWARE_SERVICE="HealthSkinAnalyzer
+CB_HOST=http://localhost:1026
+CB_API_PATH=ngsi-ld/v1/entities/
+FIWARE_SERVICE="health"
 
 # ENTITY MLModel --> Multiclass
 # Function to create the MLModel Multiclass classifier entity
@@ -12,17 +12,17 @@ FIWARE_SERVICE="HealthSkinAnalyzer
 # Algorithm, dataset, data augmentation, precision, batch size, image dimensions, MLflow URI, experiment name, bucket name, region, paths to train, augment and test data, model name, model version... 
 create_CNN_multiclass_model_entity() {
     echo "Creating MLModel entity..."
-    curl -iX POST "${CB_URL}/${CB_API_PATH}" \
+    curl -iX POST "${CB_HOST}/${CB_API_PATH}" \
         -H 'Content-Type: application/ld+json' \
         -H 'Accept: application/ld+json' \
-        -H 'fiware-service: ${FIWARE_SERVICE}' \
+        -H "fiware-service: ${FIWARE_SERVICE}" \
         -d @- <<EOF
 {
-    "id": "urn:ngsi-ld:MLModel:CNNSkinAnalyzer:multiclass:001",
+    "id": "urn:ngsi-ld:MLModel:SkinAnalyzer:multiclass",
     "type": "MLModel",
     "name": {
         "type": "Property",
-        "value": "CNNSkinAnalyzer Multiclass"
+        "value": "SkinAnalyzer"
     },
     "description": {
         "type": "Property",
@@ -36,9 +36,9 @@ create_CNN_multiclass_model_entity() {
         "type": "Property",
         "value": "ResNet50"
     },
-    "dataset": {
+    "refDataset": {
         "type": "Relationship",
-        "object": "urn:ngsi-ld:Distribution:HAM10000:1"
+        "object": "urn:ngsi-ld:Dataset:HAM10000"
     },
     "dataAugmentation": {
         "type": "Property",
@@ -121,17 +121,17 @@ EOF
 # Algorithm, dataset, data augmentation, precision, batch size, image dimensions, MLflow URI, experiment name, bucket name, region, paths to train, augment and test data, model name, model version... 
 create_CNN_binary_model_entity() {
     echo "Creating MLModel entity..."
-    curl -iX POST "${CB_URL}/ngsi-ld/v1/entities/" \
+    curl -iX POST "${CB_HOST}/${CB_API_PATH}" \
         -H 'Content-Type: application/ld+json' \
         -H 'Accept: application/ld+json' \
-        -H 'fiware-service: HealthSkinAnalyzer' \
+        -H "fiware-service: ${FIWARE_SERVICE}" \
         -d @- <<EOF
 {
-    "id": "urn:ngsi-ld:MLModel:CNNSkinAnalyzer:binary:001",
+    "id": "urn:ngsi-ld:MLModel:SkinAnalyzer:binary",
     "type": "MLModel",
     "name": {
         "type": "Property",
-        "value": "CNNSkinAnalyzer Binary"
+        "value": "SkinAnalyzer"
     },
     "description": {
         "type": "Property",
@@ -145,9 +145,9 @@ create_CNN_binary_model_entity() {
         "type": "Property",
         "value": "ResNet50"
     },
-    "dataset": {
+    "refDataset": {
         "type": "Relationship",
-        "object": "urn:ngsi-ld:Distribution:HAM10000:1"
+        "object": "urn:ngsi-ld:Dataset:HAM10000"
     },
     "dataAugmentation": {
         "type": "Property",
@@ -221,3 +221,6 @@ create_CNN_binary_model_entity() {
 }
 EOF
 }
+
+create_CNN_multiclass_model_entity
+create_CNN_binary_model_entity
