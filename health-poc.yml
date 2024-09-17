@@ -48,24 +48,6 @@ services:
       retries: 3
 
 
-  # @context file is served from here
-  ld-context:
-    labels:
-      org.fiware: 'fiware-health-poc'
-    image: httpd:alpine
-    hostname: context
-    container_name: fiware-ld-context
-    ports:
-        - "3004:80"
-    volumes:
-        - data-models:/usr/local/apache2/htdocs/
-        - type: bind
-          source: ${PWD}/conf/mime.types
-          target: /usr/local/apache2/conf/mime.types
-          read_only: true
-    healthcheck:
-      test: (wget --server-response --spider --quiet  http://ld-context/ngsi-context.jsonld 2>&1 | awk 'NR==1{print $$2}'|  grep -q -e "200") || exit 1
-
   # Databases
   mongo-db:
     labels:
@@ -88,54 +70,48 @@ services:
         mongo --quiet $host/test --eval 'quit(db.runCommand({ ping: 1 }).ok ? 0 : 2)' && echo 0 || echo 1    
       interval: 5s
 
-  # Orion is the context broker
-  orion-ld:
+
+  # Orion is an NGSI-v2 context broker
+  orion-v2:
     labels:
       org.fiware: 'fiware-health-poc'
-    platform: linux/amd64
-    image: quay.io/fiware/orion-ld:${ORION_LD_VERSION}
+    image: quay.io/fiware/orion:${ORION_VERSION}
     hostname: orion
-    container_name: fiware-orion-ld
+    container_name: fiware-orion
     depends_on:
       - mongo-db
     networks:
       - fiware-health-poc
     ports:
-      - ${EXPOSED_PORT:-1026}:${ORION_LD_PORT:-1026} # localhost:1026
-    command: -dbhost mongo-db -logLevel DEBUG -forwarding -experimental -mongocOnly
+      - "${ORION_PORT}:${ORION_PORT}" # localhost:1026
+    command: -dbURI mongodb://mongo-db -logLevel DEBUG -noCache
     healthcheck:
-      test: curl --fail -s http://orion:${ORION_LD_PORT}/version || exit 1
+      test: curl --fail -s http://orion:${ORION_PORT}/version || exit 1
       interval: 5s
-      retries: 3
 
- # Cygnus is configured to write context data to MySQL
-  cygnus:
+  # Draco is configured to write context data to MySQL
+  draco:
     labels:
       org.fiware: 'fiware-health-poc'
-    image: quay.io/fiware/cygnus-ngsi:${CYGNUS_VERSION}
-    hostname: cygnus
-    container_name: fiware-cygnus
-    networks:
-      - fiware-health-poc
+    image: quay.io/fiware/draco:${DRACO_VERSION}
+    hostname: draco
+    container_name: fiware-draco
     depends_on:
       - mysql-db
-    expose:
-      - "${CYGNUS_MYSQL_SERVICE_PORT}"
-      - "${CYGNUS_API_PORT}"
-    ports:
-      - "${CYGNUS_MYSQL_SERVICE_PORT}:${CYGNUS_MYSQL_SERVICE_PORT}" # localhost:5050
-      - "${CYGNUS_API_PORT}:${CYGNUS_API_PORT}" # localhost:5080
+    networks:
+      - fiware-health-poc
     environment:
-      - "CYGNUS_MYSQL_SERVICE_PORT=${CYGNUS_MYSQL_SERVICE_PORT}" # Notification Port that Cygnus listens when subcribing to context data changes
-      - "CYGNUS_MYSQL_HOST=mysql-db" # Hostname of the MySQL server used to persist historical context data
-      - "CYGNUS_MYSQL_PORT=${MYSQL_DB_PORT}" # Port that the MySQL server uses to listen to commands
-      - "CYGNUS_MYSQL_USER=${MYSQL_ROOT_HOST}" # Username for the MySQL database user
-      - "CYGNUS_MYSQL_PASS=${MYSQL_ROOT_PASSWORD}" # Password for the MySQL database user
-      - "CYGNUS_SERVICE_PORT=${CYGNUS_MYSQL_SERVICE_PORT}"
-      - "CYGNUS_API_PORT=${CYGNUS_API_PORT}" # Port that Cygnus listens on for operational reasons
-      - "CYGNUS_LOG_LEVEL=DEBUG" # The logging level for Cygnus
+      - NIFI_WEB_HTTP_PORT=${DRACO_API_PORT}
+    expose:
+      - "5050"
+      - "${DRACO_API_PORT}"
+    ports:
+      - "${DRACO_API_PORT}:${DRACO_API_PORT}" # localhost:9090
+      - "5050:5050"
     healthcheck:
-      test: curl --fail -s http://localhost:${CYGNUS_API_PORT}/v1/version || exit 1
+      test: curl --fail -s http://draco:${DRACO_API_PORT}/nifi-api/system-diagnostics || exit 1
+      start_period: 1m
+
 
   mysql-db:
     env_file:
@@ -143,7 +119,7 @@ services:
     platform: linux/amd64
     restart: always
     labels:
-      org.fiware: 'tutorial'
+      org.fiware: 'fiware-health-poc'
     image: mysql:${MYSQL_DB_VERSION}
     hostname: mysql-db
     container_name: db-mysql
@@ -152,7 +128,7 @@ services:
     ports:
       - "${MYSQL_DB_PORT}:${MYSQL_DB_PORT}" # localhost:3306
     networks:
-      - default
+      - fiware-health-poc
     environment:
       - "MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}"
       - "MYSQL_ROOT_HOST=${MYSQL_ROOT_HOST}"

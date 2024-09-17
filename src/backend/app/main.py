@@ -92,6 +92,7 @@ async def receive_cb_inference(inference: FilenameModel):
     if binary_result >= 0.60:
         # inform results from binary model, melanoma detected
         to_return = {"status": "success", "message": json.dumps(bin_res)}
+        model_type = "binary"
 
     else:
         # call categorical model
@@ -123,9 +124,13 @@ async def receive_cb_inference(inference: FilenameModel):
                 "value": result_cat_sorted
                 })
             }
+        model_type = "categorical"
 
     # create entity to send to context broker
-    entity_to_CB = create_skin_analyzer_inference_entity(inference_with_timestamp['filename'], to_return)
+    entity_to_CB = create_skin_analyzer_inference_entity(inference_with_timestamp['filename'], to_return, model_type)
+    print("Entity to send to context broker:")
+    print(json.dumps(entity_to_CB, indent=2))
+
     response_CB = send_entity_to_context_broker(entity_to_CB)
     return to_return, entity_to_CB, response_CB
 

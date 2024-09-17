@@ -44,7 +44,7 @@ getHeartbeat(){
 waitForOrion () {
     echo -e "\n⏳ Waiting for \033[1;34mOrion-LD\033[0m to be available\n"
 
-    while ! [ `docker inspect --format='{{.State.Health.Status}}' fiware-orion-ld` == "healthy" ]
+    while ! [ `docker inspect --format='{{.State.Health.Status}}' fiware-orion` == "healthy" ]
     do
         echo -e "\nContext Broker HTTP state: ${response} (waiting for 200)"
         pause 6
@@ -114,11 +114,11 @@ startContainers () {
     export $(cat .env .mysql.env | grep "#" -v)
     stoppingContainers
     waitForCoreContext
-    echo -e "Starting containers:  \033[1;34mOrion\033[0m, \033[1;36mIoT-Agent\033[0m, \033[1mCygnus\033[0m, a linked data \033[1mContext\033[0m, a \033[1mGrafana\033[0m metrics dashboard, \033[1mCrateDB\033[0m and \033[1mMongoDB\033[0m databases and a \033[1mRedis\033[0m cache."
+    echo -e "Starting containers:  \033[1;34mOrion\033[0m, \033[1mCygnus or Draco\033[0m, a linked data \033[1mContext\033[0m and \033[1mMongoDB\033[0m databases."
     echo -e "- \033[1;34mOrion\033[0m is the context broker"
     echo -e "- Data models \033[1m@context\033[0m (Smart Health) is supplied externally"
     echo ""
-    ${dockerCmd} -f health-poc.yml -p fiware up ${build} -d --renew-anon-volumes
+    ${dockerCmd} -f health-poc.yml -p fiware up ${build} -d --renew-anon-volumes --remove-orphans
     displayServices "orion|fiware"
     waitForMongo
     waitForOrion

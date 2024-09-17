@@ -2,17 +2,17 @@ import json
 import requests
 
 
-def send_entity_to_context_broker(entity: dict, context_broker_url = "http://orion:1026"):
+def send_entity_to_context_broker(entity: dict, context_broker_url = "http://fiware-orion:1026"):
     # Set the headers for the NGSI-LD API
     headers = {
-        'Accept': 'application/ld+json', 
-        'Content-Type': 'application/ld+json', 
-        'fiware-service': 'HealthSkinAnalyzer' 
+        'Accept': 'application/json', 
+        'Content-Type': 'application/json',
+        'fiware-service': 'health'
     }
     
     # Send the entity to the context broker
     try:
-        response = requests.post(f'{context_broker_url}/ngsi-ld/v1/entities/', 
+        response = requests.post(f'{context_broker_url}/v2/entities/', 
                                  data=json.dumps(entity), 
                                  headers=headers)
         

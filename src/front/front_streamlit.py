@@ -53,7 +53,7 @@ if uploaded_file is not None:
             # Poll the NGSI-LD Context Broker for the result
             prediction = None
             import time
-            timeout = 10  # seconds
+            timeout = 6  # seconds
             poll_interval = 2  # seconds
             start_time = time.time()
             while (time.time() - start_time) < timeout:
