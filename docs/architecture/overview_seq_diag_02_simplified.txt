@@ -1,0 +1,12 @@
+title Main interactions (simplified)
+
+Front End->FIWARE CB:The Physician \nuploads the photo and \nextra info about the patient
+FIWARE CB->BackEnd Inference:Fires a notification with\n the observation to be infered \nby the BackEnd
+FIWARE CB<-BackEnd Inference:Asks for list of models 
+FIWARE CB->BackEnd Inference:Response about available models
+BackEnd Inference->Model (n):Ask for inference
+BackEnd Inference(1)<-Model (n):Results
+FIWARE CB<-BackEnd Inference:Inform results creating Entity
+FIWARE CB->Draco:Fires a notification \nto store the history
+Draco->MySQL:Stores \nhistorical \ndata
+Front End<-FIWARE CB:Send back results

@@ -42,10 +42,10 @@ Any **NGSI** version could be use, but in this demo **NGSI-LD** is implemented.
 
 
 ## Architecture
-<img src="docs/img/architecrure_01_draft.jpg" align="left" width="1200"/>
+<img src="docs/architecture/arch_diagram_cheetah.drawio.svg" align="left" width="1200"/>
 
 <br><br>
-<img src="docs/architecture/overview_seq_diag_01.png" align="left" width="1200"/>
+<img src="docs/architecture/overview_seq_diag_01_simplified.png" align="left" width="1200"/>
 <br><br>
 ---
 
