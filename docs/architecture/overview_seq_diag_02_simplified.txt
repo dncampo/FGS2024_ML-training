@@ -1,3 +1,6 @@
+//https://sequencediagram.org/
+
+
 title Main interactions (simplified)
 
 Front End->FIWARE CB:The Physician \nuploads the photo and \nextra info about the patient

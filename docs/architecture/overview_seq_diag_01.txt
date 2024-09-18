@@ -1,3 +1,5 @@
+//https://sequencediagram.org/
+
 title Main interactions
 
 Front End->IoT:The Physician \nuploads the photo and \nextra info about the patient
