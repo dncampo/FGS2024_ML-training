@@ -66,18 +66,48 @@ if uploaded_file is not None:
             initial_font_size = 28  # Starting font size for the first element
             decrement_value = 4  # Font size decrement for each subsequent element
 
+
+            # create the CSS for the information box
+            st.markdown("""
+            <style>
+            .output-box {
+                border: 2px solid #f0f2f6;
+                border-radius: 10px;
+                padding: 20px;
+                margin-bottom: 20px;
+            }
+            .highlight {
+                background-color: #ffd700;
+                padding: 5px;
+                border-radius: 5px;
+            }
+            .highlight-bad {
+                background-color: #ff0a0a;
+                padding: 5px;
+                border-radius: 5px;
+            }
+            </style>
+            """, unsafe_allow_html=True)
+
             if entity_CB:
                 prediction = entity_CB.get('results', {}).get('value', None).get('message', None).get('value', None)
                 if len(prediction) == 1:
                     #melanoma detected
-                    st.error(f"Prediction: Melanoma detected {float(prediction['Melanoma'])*100:.2f}%")
+                    st.markdown(f"<p class='highlight-bad' style='font-size:{initial_font_size}px'><strong>Prediction: Melanoma detected: {float(prediction['Melanoma'])*100:.2f}%</strong></p>", unsafe_allow_html=True)
                 else:
                     st.success(f"Prediction: NOT a Melanoma")
                     # Iterate over the dictionary, adjusting the font size
-                for i, (key, value) in enumerate(prediction.items()):
-                    # Calculate the font size based on iteration
-                    font_size = max(initial_font_size - i * decrement_value, 12)  # Prevent font size from becoming too small
-                    st.markdown(f"<p style='font-size:{font_size}px'>{key}: {float(value)*100:.2f}%</p>", unsafe_allow_html=True)
+
+                    for i, (key, value) in enumerate(prediction.items()):
+                        # Calculate the font size based on iteration
+                        font_size = max(initial_font_size - i * decrement_value, 12)  # Prevent font size from becoming too small
+
+                        # Highlight the first result
+                        if i == 0:
+                            st.markdown(f"<p class='highlight' style='font-size:{font_size}px'><strong>Prediction: {key}: {float(value)*100:.2f}%</strong></p>", unsafe_allow_html=True)
+                        else:
+                            st.markdown(f"<p style='font-size:{font_size}px'>{key}: {float(value)*100:.2f}%</p>", unsafe_allow_html=True)
+
                 
                 st.info(f"Context Broker entity: '{entity_id}'")
                 st.json(entity_CB, expanded=True)
