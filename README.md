@@ -57,7 +57,7 @@ To download this tutorial, simply clone this repository:
 ```console
 gh repo clone dncampo/FGS2024_ML-training
 ```
-or simply
+or just
 ```console
 git clone https://github.com/dncampo/FGS2024_ML-training.git
 ```
